@@ -18,7 +18,7 @@ class UserTests(LiveServerTestCase):
         user = User.objects.get(username='test_user_2')
         response = self.client.get('/registration/users/{}/'.format(user.id))
         content = response.content
-        expected = b'{"id":7,"username":"test_user_2","email":"test_users_2@email.com","profile":{"user":7}}'
+        expected = b'{"id":7,"username":"test_user_2","email":"test_users_2@email.com"}'
         self.assertEqual(content, expected)
 
     def test_it_can_obtain_auth_token(self):
@@ -40,12 +40,11 @@ class UserTests(LiveServerTestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
 
         response = self.client.get('/registration/users/current/')
-        expected = b'{"id":8,"username":"test_user_4","email":"test_users_4@email.com","profile":{"user":8}}'
+        expected = b'{"id":8,"username":"test_user_4","email":"test_users_4@email.com"}'
         self.assertEqual(response.content, expected)
 
     def _create_user(self, idx):
         username = "test_user_{}".format(idx)
         password = "test_password_{}".format(idx)
         email = "test_users_{}@email.com".format(idx)
-        self.client.post('/registration/users/new/', {'username': username, 'password': password, 'email': email}, format='json')
-        
+        response = self.client.post('/registration/users/new/', {'username': username, 'password': password, 'email': email}, format='json')
