@@ -59,5 +59,11 @@ docs/_build/
 # PyBuilder
 target/
 
-*.sqlite3
-.idea
+.idea/
+
+
+#Vagrant
+.vagrant/
+
+#Project specific
+django_rest_app/db.sqlite3
