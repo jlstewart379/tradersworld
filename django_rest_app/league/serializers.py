@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from league.models import League, LeagueParticipant
 from registration.serializers import UserSerializer
-from registration.models import UserProfile
 from rest_framework import serializers
 
 
@@ -9,7 +8,7 @@ from rest_framework import serializers
 
 class LeagueParticipantSerializer(serializers.ModelSerializer):
 
-    name = serializers.ReadOnlyField(source='participant.user.username')
+    name = serializers.ReadOnlyField(source='participant.username')
 
     class Meta:
         model = LeagueParticipant
@@ -30,11 +29,11 @@ class LeagueSerializer(serializers.ModelSerializer):
         password = validated_data['password']
         name = validated_data['name']
         league = League.objects.create(name=name, password=password, commissioner=validated_data['commissioner'])
-        profile = UserProfile.objects.get(user=validated_data['commissioner']) 
+        user = User.objects.get(id=validated_data['commissioner'].pk) 
         
-        participant = LeagueParticipant.objects.filter(participant=profile)
+        participant = LeagueParticipant.objects.filter(participant=user)
         if not participant:
-            participant = LeagueParticipant.objects.create(league=league, participant=profile)
+            participant = LeagueParticipant.objects.create(league=league, participant=user)
 
         return league
 
