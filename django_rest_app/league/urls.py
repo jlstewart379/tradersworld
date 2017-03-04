@@ -1,6 +1,6 @@
 from django.conf.urls import url
-from league import views
 
+from league import views
 
 urlpatterns = [
     url(r'^create/$', views.CreateLeague.as_view()),
