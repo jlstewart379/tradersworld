@@ -68,9 +68,3 @@ resource "aws_codebuild_project" "django_rest_app" {
     location = "https://github.com/jlstewart379/tradersworld"
   }
 }
-
-
-
-
-
-

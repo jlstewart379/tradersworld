@@ -1,0 +1,10 @@
+version: 0.1
+
+phases:
+  install:
+    commands:
+      - pip3 install tox
+  build:
+    commands:
+      - cd django_rest_app
+      - tox 
