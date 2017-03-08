@@ -14,11 +14,11 @@ class UserTests(LiveServerTestCase):
         self.assertIsNotNone(user)
 
     def test_it_can_get_a_user(self):
-        self._create_user(2)
+        user_id = self._create_user(2)
         user = User.objects.get(username='test_user_2')
         response = self.client.get('/registration/users/{}/'.format(user.id))
-        content = response.content
-        expected = b'{"id":7,"username":"test_user_2","email":"test_users_2@email.com"}'
+        content = response.content.decode('utf-8')
+        expected = '{"id":%s,"username":"test_user_2","email":"test_users_2@email.com"}' % user_id
         self.assertEqual(content, expected)
 
     def test_it_can_obtain_auth_token(self):
@@ -33,18 +33,19 @@ class UserTests(LiveServerTestCase):
         response = self.client.get('')
 
     def test_it_can_get_an_authenticated_user(self):
-        self._create_user(4)
+        user_id = self._create_user(4)
         response = self.client.post('/registration/auth_token/', {'username':'test_user_4', 'password': 'test_password_4'})
         token = json.loads(response.content.decode('utf-8'))["token"]
 
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
 
         response = self.client.get('/registration/users/current/')
-        expected = b'{"id":8,"username":"test_user_4","email":"test_users_4@email.com"}'
-        self.assertEqual(response.content, expected)
+        expected = '{"id":%s,"username":"test_user_4","email":"test_users_4@email.com"}' % user_id
+        self.assertEqual(response.content.decode('utf-8'), expected)
 
     def _create_user(self, idx):
         username = "test_user_{}".format(idx)
         password = "test_password_{}".format(idx)
         email = "test_users_{}@email.com".format(idx)
         response = self.client.post('/registration/users/new/', {'username': username, 'password': password, 'email': email}, format='json')
+        return json.loads(response.content.decode('utf-8'))['id']

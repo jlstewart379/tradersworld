@@ -67,3 +67,17 @@ target/
 
 #Project specific
 django_rest_app/db.sqlite3
+
+#Virtualenv
+bin/
+
+#Other
+*/local/
+*/include/
+pip-selfcheck.json
+*/share/
+include/
+*egg-info/
+*.zip
+*.tfstate
+*.tfvars
